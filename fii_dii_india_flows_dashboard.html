@@ -23,6 +23,15 @@
 <meta name="twitter:image" content="https://mrchartist.com/assets/tw-image-flow.jpg">
 <meta name="twitter:creator" content="@MrChartist">
 
+<!-- PWA / Installability -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0A0A0C">
+<!-- iOS-specific PWA tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FII DII Data">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
 :root {
@@ -842,12 +851,18 @@ const weeklyData = [
 ];
 
 const monthlyData = [
-  { m:"Mar 2026*", fn:-39191, dn:27984, nc:"-2.1%" }, { m:"Feb 2026",  fn:-12240, dn:57471, nc:"+1.2%" },
-  { m:"Jan 2026",  fn:-87374, dn:105309,nc:"-3.4%" }, { m:"Dec 2025",  fn:-21402, dn:38401, nc:"+4.1%" },
-  { m:"Nov 2025",  fn:-42101, dn:51201, nc:"-1.2%" }, { m:"Oct 2025",  fn:-114402,dn:121002,nc:"-6.2%" },
-  { m:"Sep 2025",  fn:+15401, dn:35201, nc:"+3.2%" }, { m:"Aug 2025",  fn:-18402, dn:48201, nc:"+1.4%" },
-  { m:"Jul 2025",  fn:-12401, dn:52101, nc:"+4.5%" }, { m:"Jun 2025",  fn:+26501, dn:20102, nc:"+6.6%" },
-  { m:"May 2025",  fn:-42101, dn:68402, nc:"-0.3%" }, { m:"Apr 2025",  fn:-34201, dn:45201, nc:"+1.2%" },
+  { m:"Mar 2026*", fn:-39191,  dn:27984,  nc:"-2.1%", np:22420 },
+  { m:"Feb 2026",  fn:-12240,  dn:57471,  nc:"+1.2%", np:22920 },
+  { m:"Jan 2026",  fn:-87374,  dn:105309, nc:"-3.4%", np:23163 },
+  { m:"Dec 2025",  fn:-21402,  dn:38401,  nc:"+4.1%", np:23644 },
+  { m:"Nov 2025",  fn:-42101,  dn:51201,  nc:"-1.2%", np:24131 },
+  { m:"Oct 2025",  fn:-114402, dn:121002, nc:"-6.2%", np:24205 },
+  { m:"Sep 2025",  fn:+15401,  dn:35201,  nc:"+3.2%", np:25810 },
+  { m:"Aug 2025",  fn:-18402,  dn:48201,  nc:"+1.4%", np:25235 },
+  { m:"Jul 2025",  fn:-12401,  dn:52101,  nc:"+4.5%", np:24951 },
+  { m:"Jun 2025",  fn:+26501,  dn:20102,  nc:"+6.6%", np:24010 },
+  { m:"May 2025",  fn:-42101,  dn:68402,  nc:"-0.3%", np:24667 },
+  { m:"Apr 2025",  fn:-34201,  dn:45201,  nc:"+1.2%", np:24039 },
 ];
 
 const yearlyData = [
@@ -1260,7 +1275,92 @@ function initCharts() {
   if (chartC) chartC.destroy();
 
   const ctxM = document.getElementById('chMon').getContext('2d');
-  chartM = new Chart(ctxM, { type:'bar', data: { labels:monthlyData.map(d=>d.m).reverse(), datasets:[{label:'FII', data:monthlyData.map(d=>d.fn).reverse(), backgroundColor:fiiCol, borderRadius:6, borderSkipped:false}, {label:'DII', data:monthlyData.map(d=>d.dn).reverse(), backgroundColor:diiCol, borderRadius:6, borderSkipped:false}] }, options:{ responsive:true, maintainAspectRatio:false, interaction: { mode: 'index', intersect: false }, plugins:{legend:{labels:{color:labelCol, font:{size:12, weight:'600'}}}}, scales:{ x:{grid:{display:false}, ticks:{color:tickCol}}, y:{grid:{color:gridCol, drawBorder:false}, ticks:{color:tickCol}} } }});
+  const niftyGrad = ctxM.createLinearGradient(0, 0, 0, 280);
+  niftyGrad.addColorStop(0, 'rgba(255,159,10,0.4)');
+  niftyGrad.addColorStop(1, 'rgba(255,159,10,0.0)');
+  chartM = new Chart(ctxM, {
+    type: 'bar',
+    data: {
+      labels: monthlyData.map(d=>d.m).reverse(),
+      datasets: [
+        {
+          type: 'bar',
+          label: 'FII Net',
+          data: monthlyData.map(d=>d.fn).reverse(),
+          backgroundColor: fiiCol,
+          borderRadius: 6,
+          borderSkipped: false,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          type: 'bar',
+          label: 'DII Net',
+          data: monthlyData.map(d=>d.dn).reverse(),
+          backgroundColor: diiCol,
+          borderRadius: 6,
+          borderSkipped: false,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          type: 'line',
+          label: 'NIFTY 50',
+          data: monthlyData.map(d=>d.np).reverse(),
+          borderColor: '#FF9F0A',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#FF9F0A',
+          pointRadius: 4,
+          pointHoverRadius: 7,
+          pointBorderColor: 'rgba(255,159,10,0.3)',
+          pointBorderWidth: 4,
+          fill: true,
+          backgroundColor: niftyGrad,
+          tension: 0.4,
+          yAxisID: 'y1',
+          order: 1,
+          shadow: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: labelCol, font: { size: 12, weight: '600' } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.dataset.label === 'NIFTY 50') return ` NIFTY 50: ${ctx.raw.toLocaleString('en-IN')}`;
+              return ` ${ctx.dataset.label}: ₹${Math.abs(ctx.raw).toLocaleString('en-IN')} Cr`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: tickCol } },
+        y: {
+          position: 'left',
+          grid: { color: gridCol, drawBorder: false },
+          ticks: {
+            color: tickCol,
+            callback: v => (v >= 0 ? '+' : '') + (v/1000).toFixed(0) + 'k'
+          },
+          title: { display: true, text: '₹ Crore', color: tickCol, font: { size: 10 } }
+        },
+        y1: {
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color: '#FF9F0A',
+            callback: v => v.toLocaleString('en-IN')
+          },
+          title: { display: true, text: 'NIFTY 50', color: '#FF9F0A', font: { size: 10 } }
+        }
+      }
+    }
+  });
 
   const ctxC = document.getElementById('chCum').getContext('2d');
   let gradF = ctxC.createLinearGradient(0, 0, 0, 300); gradF.addColorStop(0, 'rgba(251,54,64,0.3)'); gradF.addColorStop(1, 'rgba(251,54,64,0.0)');
@@ -1328,6 +1428,17 @@ async function fetchNiftyVIX() {
   setTimeout(fetchNiftyVIX, 3 * 60 * 1000);
 }
 
+</script>
+
+<!-- PWA Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('[PWA] ✅ Service Worker registered, scope:', reg.scope))
+        .catch(err => console.warn('[PWA] ⚠️ Service Worker failed:', err));
+    });
+  }
 </script>
 </body>
 </html>
