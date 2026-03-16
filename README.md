@@ -1,184 +1,210 @@
-# 📊 FII & DII Data — India Institutional Flow Intelligence
+# 📊 FII & DII Data — India Institutional Flow Tracker
 
-> **The most advanced open-source terminal for tracking Foreign Institutional Investor (FII) & Domestic Institutional Investor (DII) flows in the Indian equity markets.**
+> **Track exactly what Foreign & Domestic big money is doing in the Indian stock market — updated live every day after market close.**
 
-Built by [Mr. Chartist](https://twitter.com/mr_chartist) — **100% free, open-source, no backend, no login.**
+Built by [Mr. Chartist](https://twitter.com/mr_chartist) · Free · Open Source · No login required
 
----
-
-## 🚀 Live Demo
-
-Open `fii_dii_india_flows_dashboard.html` in any browser. No server needed.
-
-[![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-teal)](https://github.com/mr-chartist/fii-dii-data)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Made with HTML](https://img.shields.io/badge/Made%20with-HTML%2FCSS%2FJS-orange)](fii_dii_india_flows_dashboard.html)
 [![Twitter Follow](https://img.shields.io/twitter/follow/mr_chartist?style=social)](https://twitter.com/mr_chartist)
 
 ---
 
-## ✨ Features
+## 🤔 What Is This?
 
-| Feature | Description |
-|---|---|
-| 🔴 **Live NSE Sync** | Auto-fetches today's FII/DII data from NSE via CORS proxy on every page load |
-| 📊 **Flow Strength Meter** | Animated FII vs DII aggression gauge — instantly tells you who's driving the market |
-| 🔥 **FII Streak Counter** | Tracks consecutive buying/selling sessions with velocity (total ₹ flow during streak) |
-| 🌡️ **Visual Heatmaps** | GitHub-style 45-day concentration matrices with hover magnification for FII & DII |
-| 🔍 **Smart Data Filters** | One-click filters: FII Bloodbath, DII Absorption, Extreme Divergence |
-| 📈 **Historical Charts** | Interactive Chart.js bar & area charts across 12-month and 14-year data |
-| 📷 **Widget Snapshot** | Hover any card → export as high-DPI PNG with embedded watermark |
-| 𝕏 **Post to X / Twitter** | Pre-filled tweet with today's exact institutional flow data |
-| 🌗 **OLED Dark / Sand Light** | Pure matte black + sand white theme toggle with live chart re-rendering |
-| 📱 **Fully Responsive** | Works beautifully on mobile, tablet, and desktop |
+This is a **dashboard** that shows you:
+- **FII (Foreign Institutional Investors)** — Are foreigners buying or selling Indian stocks today?
+- **DII (Domestic Institutional Investors)** — Are Indian mutual funds & institutions buying or selling?
+- Historical data going back **14 years**
+- Visual patterns, streaks, heatmaps, and charts — all in one place
+
+**Why does this matter?** When FIIs sell heavily, markets usually fall. When DIIs absorb that selling, it cushions the fall. This dashboard tells you exactly who is doing what, in real-time.
 
 ---
 
-## 📸 Screenshots
+## 🚀 How to Use It (Step-by-Step for Everyone)
 
-### Hero Dashboard — OLED Dark Mode
-Shows the latest session data, FII streak widget, Flow Strength Meter, and market context cards.
-![Hero Dashboard OLED](docs/dashboard_hero.png)
+You do **not** need to be a programmer. Follow these steps exactly.
 
-### Visual Flow Heatmaps
-GitHub-style 45-day FII & DII concentration matrices. Each cell = one trading day. Hover to magnify.
-![Visual Matrices](docs/heatmaps.png)
+### Step 1 — Download the Project
 
-### Data Matrix with Smart Filters
-Daily, Weekly, Monthly, and Annual data tables. Filter by FII Bloodbath (>₹5k Cr sell), DII Absorption, or Extreme Divergence.
-![Data Hub Filters](docs/matrix.png)
+Click the green **"Code"** button on this page → **"Download ZIP"** → Extract it to any folder on your computer (e.g., `D:\FII-DII-Data`).
 
----
-
-## 🧠 How to Use
-
-### Quick Start
-1. **Download** or clone this repo
-2. **Open** `fii_dii_india_flows_dashboard.html` in Chrome, Edge, or Firefox
-3. The terminal auto-syncs with NSE data on load
-
-```bash
-git clone https://github.com/mr-chartist/fii-dii-data.git
-cd fii-dii-data
-# Just open the HTML file — no npm, no server needed!
-start fii_dii_india_flows_dashboard.html
+*Or if you know Git:*
+```
+git clone https://github.com/MrChartist/fii-dii-data.git
 ```
 
-### Status Indicators
-| Indicator | Meaning |
-|---|---|
-| 🟢 **LIVE SYNC** | Today's data fetched successfully from NSE |
-| 🟡 **LOCAL ARCHIVE** | Markets closed / API rate-limited. Fallback embedded 15-day archive active |
+---
 
-### Force Sync
-Click **"Force Sync"** in the top-right header to manually trigger a fresh NSE data pull mid-session.
+### Step 2 — Install Python (One-time only)
+
+Python is the engine that fetches live data from NSE. You only do this once.
+
+1. Go to 👉 **https://www.python.org/downloads/**
+2. Click **"Download Python"** (the big yellow button)
+3. Run the installer
+4. ⚠️ **IMPORTANT:** On the first screen, check the box that says **"Add Python to PATH"** before clicking Install
+
+![Python Install Screenshot](docs/python_install_tip.png)
 
 ---
 
-## 📖 Reading the Dashboard
+### Step 3 — Install the Data Fetcher (One-time only)
 
-### Flow Strength Meter
-Calculates the **relative aggression** of FII vs DII in absolute flow terms:
-- **FII Bar (Red) > 70%** → FIIs are the dominant force
-- **FII Sell 80% + DII Buy 20%** → 🚨 Panic sell with little domestic support
-- **FII Sell 80% + DII Buy 80%** → ✅ Structural rotation — not a free fall
+1. Open the folder where you extracted the project
+2. In the address bar of the folder, type `cmd` and press Enter — a black window opens
+3. Copy-paste this command and press Enter:
+
+```
+pip install requests
+```
+
+Wait for it to finish (takes ~10 seconds). You'll see "Successfully installed".
+
+---
+
+### Step 4 — Start the Live Data Server
+
+Every time you want to use the dashboard:
+
+1. Go to your project folder
+2. **Double-click `start.bat`**
+
+A black window will appear saying **"Server live at http://localhost:5000"** — keep this window open while using the dashboard.
+
+> 💡 **Windows users:** After the first time, this starts automatically when you log in to your computer. You don't need to double-click it again after a restart.
+
+---
+
+### Step 5 — Open the Dashboard
+
+Open your browser (Chrome, Edge, Firefox) and go to:
+
+**➡️ http://localhost:5000**
+
+Bookmark this link. That's your dashboard — always open this, not the HTML file directly.
+
+---
+
+## 🟢 Understanding the Status Pill (Top Right)
+
+| What You See | What It Means |
+|---|---|
+| 🟢 **LIVE • Refresh in 04:55** | ✅ Today's real data from NSE. Auto-refreshes every 5 minutes |
+| 🟡 **LOCAL ARCHIVE** | Markets are closed or data not yet published. Shows last known data |
+| 🔴 **NSE BLOCKED** | Server is not running. Double-click `start.bat` to fix this |
+
+---
+
+## 📊 What's On the Dashboard
+
+### Hero Section (Top)
+- **FII Net** — Total net buying/selling by foreign investors today (in ₹ Crore)
+- **DII Net** — Total net buying/selling by domestic funds today
+- **Combined Liquidity** — The net overall impact on market liquidity
+- **Flow Strength Meter** — Shows who is the bigger force today (FII or DII)
 
 ### FII Streak Counter
-Tracks consecutive sessions FII stays on one side:
-- **🔴 Sell Streak 10+ days** at ₹5,000+ Cr/day = historically extreme oversold 
-- **🟢 Buy Streak 5+ days** = strong confirmation of trend reversal / FII re-entry
-- **Streak Velocity** = cumulative ₹ Cr damage or firepower during that streak
+How many consecutive days FIIs have been on the same side:
+- 🔴 **5+ days selling** = market under pressure, possible oversold bounce coming
+- 🟢 **5+ days buying** = strong foreign re-entry signal
 
-### Heatmap Color Scale
-| Color | Meaning |
-|---|---|
-| 🔴 Deep Red | Extreme FII dump (>80% of max) |
-| 🟠 Mid Red | Heavy selling |
-| 🟡 Light Red | Light net selling |
-| 🟢 Light Green | Light net buying |
-| 💚 Deep Green | Heavy accumulation |
+### Tabs at the Bottom
 
-### Smart Filters (Daily Matrix)
-| Filter | Trigger |
+| Tab | What's Inside |
 |---|---|
-| **All Data** | Every session in archive |
-| **FII Bloodbath** | FII net sold > ₹5,000 Cr |
-| **DII Absorption** | DII net bought > ₹5,000 Cr |
-| **Extreme Divergence** | FII sold ≥ ₹8,000 Cr AND DII bought ≥ ₹8,000 Cr |
+| **Databases & Matrices** | Daily, Weekly, Monthly & Annual data tables with smart filters |
+| **Visual Flow Heatmaps** | 45-day color grid — spot patterns at a glance |
+| **Historical Charts** | 12-month bar chart & 14-year cumulative divergence chart |
+| **Documentation** | Full feature guide |
+
+### Smart Filters (in the Daily table)
+- **FII Bloodbath** — Only days where FIIs sold more than ₹5,000 Cr (the really bad days)
+- **DII Absorption** — Days where DIIs bought more than ₹5,000 Cr (strong domestic defense)
+- **Extreme Divergence** — FII sold ≥₹8,000 Cr AND DII bought ≥₹8,000 Cr (structural rotation — rare and very significant)
 
 ---
 
-## 🛠️ Tech Stack
+## 💾 Exporting & Sharing
 
+- **📷 Export any card** — Hover over any card → click the 📷 camera icon → saves as PNG with watermark
+- **📸 Snapshot Full Page** — Header button → saves the entire dashboard as one image
+- **𝕏 Post to X** — Pre-fills a tweet with today's flow data. One click to share your analysis
+
+---
+
+## ❓ Common Questions
+
+**"The black window (server) disappeared — dashboard isn't loading"**
+→ Just double-click `start.bat` again to restart it.
+
+**"It says LOCAL ARCHIVE, not LIVE"**
+→ NSE only publishes FII/DII data after market close (~5:30–6:00 PM IST). If it's before that, local archive is correct and expected.
+
+**"I see data from a few days ago, but today's isn't there"**
+→ Check if the server is running (the black window). If it is, click **Force Sync** in the top-right.
+
+**"Can I use this on my phone?"**
+→ The dashboard is mobile-responsive, but the live server needs to run on a PC/laptop. You can open `http://YOUR-PC-IP:5000` on your phone if both are on the same WiFi.
+
+**"Is my data safe? Does this send anything to the internet?"**
+→ The only external request is fetching data FROM NSE India's public API. Nothing from your computer is ever sent anywhere.
+
+---
+
+## 🛠️ For Technical Users
+
+### How the Live Sync Works
+`server.py` is a lightweight local web server (no cloud, no backend) that:
+1. Creates a browser-like session with proper cookies & headers
+2. Calls `https://www.nseindia.com/api/fiidiiTradeReact`
+3. Caches the result — refreshes automatically after 5:30 PM IST each day
+4. Serves the dashboard at `http://localhost:5000`
+
+### Tech Stack
 | Technology | Purpose |
 |---|---|
-| **Vanilla HTML/CSS/JS** | Core — zero dependencies, zero build step |
-| **Chart.js 3.9** | Monthly bar charts & cumulative area charts |
-| **html2canvas** | High-DPI widget snapshot export |
-| **NSE India API** | Live FII/DII data source |
-| **allorigins.win** | CORS proxy to access NSE from browser |
+| Vanilla HTML/CSS/JS | Dashboard UI — zero dependencies, no build step |
+| Python + requests | Local proxy server with NSE session handling |
+| Chart.js | Interactive historical charts |
+| html2canvas | High-DPI widget snapshot export |
+| NSE India Public API | Live FII/DII data source |
 
----
-
-## 📊 Data Coverage
-
-| Timeframe | Coverage |
+### Files
+| File | Purpose |
 |---|---|
-| Daily | Last 15 trading sessions |
-| Weekly | Last 10 weeks |
-| Monthly | Last 12 months |
-| Annual | 2013 – 2026 (14 years) |
-
-> **Note:** The local archive is embedded directly in the HTML. For live updates, the NSE API is queried on every page load.
-
----
-
-## 🔧 Customizing the Data
-
-All data is embedded in the `<script>` tag inside `fii_dii_india_flows_dashboard.html`. To update:
-
-```javascript
-const dailyData = [
-  { d:"15-Mar-2026", fb:12000, fs:20000, fn:-8000, db:18000, ds:10000, dn:8000 },
-  // d = date, fb = FII buy, fs = FII sell, fn = FII net, db = DII buy, ds = DII sell, dn = DII net
-  ...
-];
-```
+| `fii_dii_india_flows_dashboard.html` | The entire dashboard UI |
+| `server.py` | Live data server (run this!) |
+| `start.bat` | Windows one-click launcher |
+| `requirements.txt` | Python dependencies (`pip install -r requirements.txt`) |
 
 ---
 
 ## 🤝 Contributing
 
-This is an open-source project — PRs, issues, and stars are welcome!
+PRs and issues are very welcome!
 
-1. Fork this repo
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m 'Add your feature'`
-4. Push and open a PR
-
-### Ideas for Contributions
-- [ ] Add Nifty 50 overlay on flow charts
-- [ ] Add sector-wise FII flow breakdown
-- [ ] Export to CSV from the data matrix
-- [ ] Add more intelligent alerts (e.g., send notification on extreme sessions)
-- [ ] Add GitHub Actions to auto-update data daily
+Ideas:
+- [ ] Mac/Linux auto-start script
+- [ ] Nifty 50 overlay on flow charts
+- [ ] GitHub Actions to auto-update embedded data daily
+- [ ] Export to CSV from data matrix
+- [ ] Sector-wise FII flow breakdown
 
 ---
 
 ## 📜 License
 
-MIT License — use it, fork it, ship it, share it. Attribution appreciated but not required.
+MIT — use it, fork it, share it freely. Attribution appreciated.
 
 ---
 
-## 👨‍💻 Author
+## 👋 Author
 
-Built with ❤️ by [Mr. Chartist](https://twitter.com/mr_chartist)
+Made with ❤️ by [Mr. Chartist](https://twitter.com/mr_chartist)
 
-If this tool helps your trading or analysis, a ⭐ on GitHub and a follow on X would mean a lot!
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/mr_chartist?style=social)](https://twitter.com/mr_chartist)
+If this helps your trading, a ⭐ star on GitHub means a lot!
 
 ---
 
-*Disclaimer: This tool is for educational and informational purposes only. Not financial advice. Always do your own research before making investment decisions.*
+*⚠️ Disclaimer: This tool is for educational and informational purposes only. Not financial advice. Always do your own research.*

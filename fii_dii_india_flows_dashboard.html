@@ -98,7 +98,7 @@ header { display: flex; justify-content: space-between; align-items: flex-start;
 .status-pill.err .status-dot { background: var(--orange); animation: none; }
 .status-pill.err span { color: var(--t1); }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,208,158,0.6); } 70% { box-shadow: 0 0 0 6px rgba(0,208,158,0); } 100% { box-shadow: 0 0 0 0 rgba(0,208,158,0); } }
-
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes borderSweep { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
 /* ── CAMERA EXPORT ICON & HDR BTNS ── */
@@ -901,79 +901,133 @@ function postToX() {
   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-/* ── LIVE AUTO-FETCH (PRO) ── */
+/* ── LIVE AUTO-FETCH ── */
+const LOCAL_SERVER = 'http://localhost:5000';
+const AUTO_REFRESH_MS = 5 * 60 * 1000; // 5 minutes
+let nextRefreshAt = 0;
+let refreshTimer = null;
+
+function scheduleNextRefresh() {
+  if (refreshTimer) clearTimeout(refreshTimer);
+  nextRefreshAt = Date.now() + AUTO_REFRESH_MS;
+  refreshTimer = setTimeout(() => fetchLiveNSE(false), AUTO_REFRESH_MS);
+}
+
+/* Live countdown ticker in the status pill */
+function startCountdown() {
+  setInterval(() => {
+    const sTxt = document.getElementById('sTxt');
+    if (!sTxt) return;
+    const pill = document.getElementById('sPill');
+    if (pill && pill.classList.contains('live')) {
+      const sec = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+      const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+      const ss = String(sec % 60).padStart(2, '0');
+      sTxt.innerHTML = `LIVE &bull; Refresh in ${mm}:${ss}`;
+    }
+  }, 1000);
+}
+
+async function injectLiveRow(d) {
+  const sPill = document.getElementById('sPill');
+  const sTxt  = document.getElementById('sTxt');
+  if (dailyData[0].d !== d.date) {
+    dailyData.unshift({ d: d.date, fb: d.fii_buy, fs: d.fii_sell, fn: d.fii_net, db: d.dii_buy, ds: d.dii_sell, dn: d.dii_net });
+  } else {
+    dailyData[0] = { d: d.date, fb: d.fii_buy, fs: d.fii_sell, fn: d.fii_net, db: d.dii_buy, ds: d.dii_sell, dn: d.dii_net };
+  }
+  if (sPill) sPill.className = 'status-pill live';
+  if (sTxt)  sTxt.innerHTML  = `LIVE &bull; ${new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
+  renderDashboard();
+}
+
 async function fetchLiveNSE(isManual = false) {
   const btn = document.getElementById('btnRefresh');
-  if(isManual && btn) {
+  if (isManual && btn) {
     btn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Syncing...`;
     btn.style.opacity = '0.7';
   }
-  
+
+  let success = false;
+
+  /* ── TIER 1: Local Python server (most reliable) ── */
   try {
-    const sPill = document.getElementById('sPill');
-    const sTxt = document.getElementById('sTxt');
-    
-    // Using a reliable CORS proxy to hit NSE
-    const targetUrl = encodeURIComponent('https://www.nseindia.com/api/fiidiiTradeReact');
-    const url = `https://api.allorigins.win/get?url=${targetUrl}`;
-    
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Fetch failed');
-    
-    const data = await res.json();
-    const parsed = JSON.parse(data.contents);
-    
-    if (parsed && parsed.length > 0) {
-      let fb=0, fs=0, fn=0, db=0, ds=0, dn=0;
-      let dateRaw = parsed[0].date;
-      
-      parsed.forEach(row => {
-        if(row.category.includes('FII')) {
-          fb = parseFloat(row.buyValue) || 0;
-          fs = parseFloat(row.sellValue) || 0;
-          fn = parseFloat(row.netValue) || 0;
-        } else if(row.category.includes('DII')) {
-          db = parseFloat(row.buyValue) || 0;
-          ds = parseFloat(row.sellValue) || 0;
-          dn = parseFloat(row.netValue) || 0;
+    const res = await fetch(`${LOCAL_SERVER}/api/fii-dii`, { signal: AbortSignal.timeout(3000) });
+    if (res.ok) {
+      const d = await res.json();
+      if (d.date && d.fii_net !== undefined) {
+        await injectLiveRow(d);
+        scheduleNextRefresh();
+        success = true;
+        console.log('[SYNC] ✅ Live data from local server');
+      }
+    }
+  } catch (e) { /* server not running — fall through */ }
+
+  /* ── TIER 2: Multiple CORS proxies ── */
+  if (!success) {
+    const nseUrl = 'https://www.nseindia.com/api/fiidiiTradeReact';
+    const proxies = [
+      `https://corsproxy.io/?${encodeURIComponent(nseUrl)}`,
+      `https://api.allorigins.win/get?url=${encodeURIComponent(nseUrl)}`,
+    ];
+
+    for (const proxyUrl of proxies) {
+      try {
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+        if (!res.ok) continue;
+        const raw = await res.json();
+        // allorigins wraps in {contents:...}, corsproxy.io returns directly
+        const parsed = raw.contents ? JSON.parse(raw.contents) : raw;
+        if (!Array.isArray(parsed) || parsed.length === 0) continue;
+
+        let row = { date: '', fii_buy:0,fii_sell:0,fii_net:0,dii_buy:0,dii_sell:0,dii_net:0 };
+        parsed.forEach(r => {
+          const cat = (r.category || '').toUpperCase();
+          if (cat.includes('FII') || cat.includes('FPI')) {
+            row.fii_buy  = parseFloat(r.buyValue  || 0);
+            row.fii_sell = parseFloat(r.sellValue || 0);
+            row.fii_net  = parseFloat(r.netValue  || 0);
+            row.date     = r.date || '';
+          } else if (cat.includes('DII')) {
+            row.dii_buy  = parseFloat(r.buyValue  || 0);
+            row.dii_sell = parseFloat(r.sellValue || 0);
+            row.dii_net  = parseFloat(r.netValue  || 0);
+          }
+        });
+
+        if (row.date) {
+          await injectLiveRow(row);
+          scheduleNextRefresh();
+          success = true;
+          console.log('[SYNC] ✅ Live data from CORS proxy:', proxyUrl);
+          break;
         }
-      });
-      
-      let newDateParts = dateRaw.split('-'); // e.g. "13-Mar-2026"
-      let newDate = dateRaw; // Fallback
-      if(newDateParts.length===3) {
-         newDate = `${newDateParts[0]}-${newDateParts[1]}-${newDateParts[2]}`;
-      }
-      
-      // Prevent duplicates in history
-      if (dailyData[0].d !== newDate) {
-        dailyData.unshift({ d: newDate, fb: fb, fs: fs, fn: fn, db: db, ds: ds, dn: dn });
-        sPill.className = 'status-pill live';
-        sTxt.innerHTML = `LIVE SYNC &bull; ${new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
-        renderDashboard(); 
-      } else {
-        // Date matches, just update values to ensure accuracy right after close
-        dailyData[0] = { d: newDate, fb: fb, fs: fs, fn: fn, db: db, ds: ds, dn: dn };
-        sPill.className = 'status-pill live';
-        sTxt.innerHTML = `LIVE SYNC &bull; ${new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'})}`;
-        renderDashboard();
-      }
+      } catch (e) { /* try next */ }
     }
-  } catch(e) {
-    console.warn("Live fetch failed, falling back to local archive.", e);
-    if(isManual) alert("Manual Sync Failed. NSE API might be blocking the CORS proxy. Falling back to robust local matrix.");
-  } finally {
-    if(isManual && btn) {
-      btn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg> Force Sync`;
-      btn.style.opacity = '1';
-    }
+  }
+
+  /* ── FAIL ── */
+  if (!success) {
+    console.warn('[SYNC] ⚠️ All sources failed — showing local archive.');
+    const sPill = document.getElementById('sPill');
+    const sTxt  = document.getElementById('sTxt');
+    if (sPill) { sPill.className = 'status-pill err'; }
+    if (sTxt)  { sTxt.innerHTML = isManual ? 'NSE BLOCKED — Run server.py for live data' : 'LOCAL ARCHIVE'; }
+    scheduleNextRefresh(); // retry anyway
+  }
+
+  if (isManual && btn) {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg> Force Sync`;
+    btn.style.opacity = '1';
   }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-   renderDashboard();
-   initCharts();
-   fetchLiveNSE();
+  renderDashboard();
+  initCharts();
+  fetchLiveNSE();
+  startCountdown();
 });
 
 // 3. Charts Render & Theme Logic

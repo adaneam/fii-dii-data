@@ -9,3 +9,9 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Server runtime
+server.log
+start_server_silent.vbs
+__pycache__/
+*.pyc
