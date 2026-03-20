@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "FII & DII Data Dashboard with Live Analytics — hosted on Hostinger",
   "main": "server.js",
-  "engines": {
-    "node": ">=20.0.0"
-  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -18,7 +15,6 @@
     "csv-parse": "^5.5.5",
     "express": "^4.19.2",
     "node-cron": "^4.2.1",
-    "puppeteer": "^24.40.0",
     "socket.io": "^4.8.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^6.0.1"

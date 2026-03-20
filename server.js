@@ -203,7 +203,7 @@ cron.schedule('45 10 * * 1-5', () => runFetchTask("Cron Post-market-1"));
 cron.schedule('0 12 * * 1-5', () => runFetchTask("Cron Post-market-2"));
 
 // ── Start Server ──────────────────────────────────────────────────────────────
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
     
     // Defer non-critical startup tasks for 5 seconds to ensure server is fully ready
