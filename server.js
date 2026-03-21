@@ -169,6 +169,26 @@ app.get('/api/market', async (req, res) => {
     }
 });
 
+// ── F&O Participant-wise OI Proxy ────────────────────────────────────────────
+app.get('/api/fno', async (req, res) => {
+    try {
+        const nseUrl = 'https://www.nseindia.com/api/participant-wise-open-interest';
+        const { data } = await axios.get(nseUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': 'application/json',
+                'Referer': 'https://www.nseindia.com/report-detail/fo_participant',
+                'Accept-Language': 'en-US,en;q=0.9',
+            },
+            timeout: 10000,
+        });
+        res.json(data);
+    } catch (err) {
+        console.error('[API] /api/fno error:', err.message);
+        res.status(502).json({ error: 'NSE F&O API unavailable', detail: err.message });
+    }
+});
+
 // ── NSDL FPI Routes ──────────────────────────────────────────────────────────
 const fs = require('fs');
 const DATA_DIR = require('path').join(__dirname, 'data');

@@ -2929,6 +2929,60 @@ async function fetchLiveNSE(isManual = false) {
     btn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg> Force Sync`;
     btn.style.opacity = '1';
   }
+
+  // After cash market sync, also fetch F&O participant-wise OI
+  try { await fetchFnoData(); } catch(e) { console.log('[SYNC] F&O fetch skipped:', e.message); }
+}
+
+/* ── F&O: Fetch NSE Participant-wise Open Interest ──────────────────────────── */
+async function fetchFnoData() {
+  const nseUrl = 'https://www.nseindia.com/api/participant-wise-open-interest';
+  const proxies = [
+    `/api/fno`,
+    `https://corsproxy.io/?${encodeURIComponent(nseUrl)}`,
+    `https://api.allorigins.win/get?url=${encodeURIComponent(nseUrl)}`,
+  ];
+
+  for (const proxyUrl of proxies) {
+    try {
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok) continue;
+      const raw = await res.json();
+      const parsed = raw.contents ? JSON.parse(raw.contents) : raw;
+
+      // NSE returns an array of objects with category/futIndexLong/futIndexShort etc.
+      if (!Array.isArray(parsed) || parsed.length === 0) continue;
+
+      let fnoRow = {};
+      for (const row of parsed) {
+        const cat = (row.clientType || row.category || '').toUpperCase().trim();
+        if (cat.includes('FII') || cat === 'FPI') {
+          fnoRow.fii_idx_fut_long  = parseFloat(row.futIndexLong  || row.fut_idx_long  || 0);
+          fnoRow.fii_idx_fut_short = parseFloat(row.futIndexShort || row.fut_idx_short || 0);
+          fnoRow.fii_stk_fut_long  = parseFloat(row.futStockLong  || row.fut_stk_long  || 0);
+          fnoRow.fii_stk_fut_short = parseFloat(row.futStockShort || row.fut_stk_short || 0);
+          fnoRow.fii_idx_call_long  = parseFloat(row.optIdxCallLong  || row.opt_idx_call_long  || 0);
+          fnoRow.fii_idx_call_short = parseFloat(row.optIdxCallShort || row.opt_idx_call_short || 0);
+          fnoRow.fii_idx_put_long   = parseFloat(row.optIdxPutLong   || row.opt_idx_put_long   || 0);
+          fnoRow.fii_idx_put_short  = parseFloat(row.optIdxPutShort  || row.opt_idx_put_short  || 0);
+        } else if (cat.includes('DII')) {
+          fnoRow.dii_idx_fut_long  = parseFloat(row.futIndexLong  || row.fut_idx_long  || 0);
+          fnoRow.dii_idx_fut_short = parseFloat(row.futIndexShort || row.fut_idx_short || 0);
+          fnoRow.dii_stk_fut_long  = parseFloat(row.futStockLong  || row.fut_stk_long  || 0);
+          fnoRow.dii_stk_fut_short = parseFloat(row.futStockShort || row.fut_stk_short || 0);
+        }
+      }
+
+      // Only merge if we got at least one meaningful value
+      if (fnoRow.fii_idx_fut_long !== undefined) {
+        dailyData[0] = { ...dailyData[0], ...fnoRow };
+        console.log('[SYNC] ✅ F&O participant-wise OI updated from:', proxyUrl);
+        renderDashboard(); // Re-render to update F&O section
+        return;
+      }
+    } catch(e) { /* try next proxy */ }
+  }
+  console.log('[SYNC] F&O: Could not fetch from any source, using existing data');
 }
 
 window.toggleSectorChart = function() {
