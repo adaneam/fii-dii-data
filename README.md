@@ -12,140 +12,229 @@
 
 ---
 
-## ✨ What's New (The "Deep Dive" Update)
+## ✨ Features
 
 | Feature | Description |
 |---------|-------------|
-| 🕸️ **Comprehensive NSDL Scraping** | Fully automated Puppeteer scraping of Daily, Monthly, Quarterly, and Yearly FPI data from NSDL endpoints. |
-| 🛡️ **Serverless JSON Fallbacks** | Dashboard elegantly falls back to local `.json` data when the Express server is offline, supporting static deployment! |
-| 📱 **Premium UI & UX Polish** | iOS-style mobile floating dock navigation, custom slim scrollbars, and smoothed glassmorphism box-shadows. |
-| 🍝 **Interactive Chart Upgrades** | FPI Sector *Spaghetti Chart* now isolates active trends on hover. Sector Cards feature premium gradient sparklines. |
-| 🤿 **New "Deep Dive" Analytics** | Live integration of Country-wise AUC (Donut Chart), Trade-wise Equity Flows mapped via ISIN, and Debt Utilisation. |
+| ⚡ **Real-Time FII/DII Flows** | Latest net buy/sell data with flow strength meter, streak trackers, and 45-day heatmaps |
+| 📊 **FPI Macro Analytics** | Daily, monthly, quarterly & yearly FPI investment trends from NSDL (2005–present) |
+| 🌐 **Sector Allocation** | Fortnightly NSDL FPI sector data with gradient sparklines and on-hover spaghetti chart |
+| 🤿 **Deep Dive Module** | Country-wise AUC donut chart, trade-wise ISIN-mapped equity flows, debt utilisation & ODI/PN |
+| 🗄️ **Multi-Timeframe Archives** | Daily, Weekly, Monthly & Annual databases with magnitude bars, filters & CSV export |
+| 🎲 **Live F&O Derivatives** | Participant-wise Open Interest from NSE — FII/DII index futures, stock futures, calls & puts |
+| 📖 **Built-in Documentation** | Comprehensive in-app user manual with formulas, data sources & methodology |
+| 🌙 **Dark / Light Mode** | OLED black dark mode & clean light theme |
+| 📷 **Full-Page Export** | html2canvas-powered screenshot & Post to 𝕏 |
+| 📱 **PWA Installable** | Progressive Web App with offline support |
+| 🔍 **SEO Optimized** | JSON-LD structured data, Open Graph, Twitter Cards, canonical URL |
 
 ---
 
-## 📸 Tab-by-Tab Walkthrough & Documentation
+## 📸 Tab-by-Tab Walkthrough
 
 ### 1. ⚡ Live NSE (Home)
 The default landing view covering immediately actionable institutional activity.
-- **Hero Card**: FII/FPI Net vs DII Net with visual aggression borders.
-- **Streak Trackers**: Tracks consecutive buying/selling days with aggregated capital velocity.
-- **Concentration Matrices**: GitHub-inspired 45-Day heatmaps visualizing FII sell-off depth and DII absorption density.
+- **Hero Card**: FII/FPI Net vs DII Net with visual aggression borders
+- **Flow Strength Meter**: `FII_NET / (|FII_NET| + |DII_NET|) × 100` — visual split of FII aggression vs DII support
+- **Streak Trackers**: Consecutive buying/selling days with aggregated capital velocity
+- **45-Day Heatmaps**: GitHub-style concentration matrices — FII sell-off depth & DII absorption density
+- **Quick Stats**: 5-Year cumulative flows, SIP run-rate, FII NSE500 ownership
 
 ### 2. 📊 FPI Macro
-Macro-level historical trajectories and systemic liquidity shifts.
-- **Institutional Flow Canvas**: Grand Chart.js canvas visualizing Net Flows across Daily, Weekly, and Monthly resolutions.
-- **Daily & Periodic Trends**: Breakdowns of Equity, Debt, and Hybrid injections with dynamically populated summary cards.
+Macro-level historical trajectories and systemic liquidity shifts sourced from NSDL.
+- **FPI Daily Summary**: Latest equity, debt, and hybrid net investment with summary stat cards
+- **Institutional Flow Canvas**: Chart.js canvas plotting FII vs DII flows (Daily/Weekly/Monthly/Annual toggles)
+- **Quarterly FPI Breakdown**: Quarter-over-quarter equity and debt allocations (2015–present)
+- **Yearly & Monthly Heatmap**: Multi-year monthly data (2005–2026) showing FPI investment patterns
 
 ### 3. 🌐 Sectors
-Fortnightly FPI Allocation tracking to spot smart-money industry rotation.
-- **Screener-style Sector Cards**: Displays sector AUM, FII ownership percentage, and highly stylized 24-fortnight visual sparklines.
-- **Flow Trend Chart**: Interactive 8-sector comparative historical line chart (spaghetti UI) featuring on-hover focus fading.
+Fortnightly FPI Allocation tracking from NSDL/CDSL to spot smart-money industry rotation.
+- **Sector Cards**: AUM %, FII Ownership %, and 24-fortnight sparkline charts with gradient fills
+- **FPI Sector Flow Trend**: Interactive 8-sector comparative line chart with on-hover focus fading
+- **Scoreboard**: Top 8 inflows/outflows ranked by cumulative net flow with progress bars
+- **Sort Modes**: Total AUM, Fortnight Δ, 1-Year Net Flow, or Alphabetical
 
 ### 4. 🤿 Deep Dive
 Advanced datasets bridging macroeconomic demographics and debt thresholds.
-- **Country AUC**: Donut chart illustrating FPI capital sources (USA, Singapore, Luxembourg, etc.).
-- **Trade-wise Engine**: Granular monthly flow tracking mapped exactly to the Nifty 500 via ISIN cross-referencing.
-- **Debt & ODI**: Debt utilisation progress bars and Offshore Derivative Instrument (ODI) trackers.
+- **Trade-Wise Engine**: Granular monthly flow tracking mapped to Nifty 500 via ISIN cross-referencing
+- **Country AUC**: Donut chart of FPI capital sources (USA, Singapore, Luxembourg, Mauritius, etc.)
+- **ODI / P-Notes**: Offshore Derivative Instrument tracking — capital entering India via P-Notes
+- **Debt Utilisation**: FPI debt investment limits vs actual utilisation with progress indicators
 
 ### 5. 🗄️ Databases
-Complete institutional flow archives with magnitude bars and CSV exports.
+Complete institutional flow archives with Bloomberg-terminal grade tabular rendering.
+- **4 Timeframes**: Daily (Last 15), Weekly (12W), Monthly (24M), Annual Tracker
+- **Filters**: FII Bloodbath (< -₹5k Cr), DII Absorption, Divergence
+- **CSV Export**: Custom FROM/TO date range with instant download
 
-### 6. 🎲 F&O Positions
-Derivatives positioning analysis mapping Index/Stock Futures and Call/Put option Long-Short ratios for sentiment indication.
+### 6. 🎲 F&O Derivatives
+Live participant-wise Open Interest from NSE `participant-wise-open-interest` API.
+- **OI Breakdown**: FII/DII Long vs Short for Index Futures, Stock Futures, Index Calls & Puts
+- **Sentiment Engine**: Heuristic scoring algorithm → Highly Bullish / Mildly Bullish / Neutral / Mildly Bearish / Highly Bearish
+- **Historical Chart**: 20-period trajectory for FII Futures, Calls, Puts, and DII Futures
+- **3-Tier Proxy**: Express server → corsproxy.io → allorigins.win for reliable data fetching
 
 ### 7. 📖 Docs
-A built-in user manual detailing mathematical formulas for Momentum Alpha, Data source citations (NSE TRDREQ vs NSDL), and system architectures.
+Built-in user manual with 8 detailed sections covering every feature, formula, and data source.
 
 ---
 
 ## 💻 Step-by-Step Installation Guide
 
-The tracker can run fully featured via its **Node.js + Express backend** (which powers live web scraping) or as a static lightweight site utilizing local JSON fallbacks.
+The tracker runs via its **Node.js + Express backend** (live scraping + API proxy) or as a **static site** with JSON fallbacks.
 
-### 🍏 Mac OS Installation
-1. **Install Prerequisites**: Open Terminal and install Node.js and Git (requires Homebrew).
-   ```bash
-   brew install node git
-   ```
-2. **Clone & Enter Repo**: 
-   ```bash
-   git clone https://github.com/MrChartist/fii-dii-data.git
-   cd fii-dii-data
-   ```
-3. **Install Dependencies**: `npm install`
-4. **Start the Engine**: `node server.js`
-5. **View Dashboard**: Open your browser to `http://localhost:3000`
+### 🍏 macOS
+```bash
+# 1. Install prerequisites (via Homebrew)
+brew install node git
 
-### 🪟 Windows Installation
-1. **Install Prerequisites**: Download and install [Node.js](https://nodejs.org/) and [Git](https://git-scm.com/).
-2. **Clone & Enter Repo**: Open Command Prompt (or PowerShell):
-   ```cmd
-   git clone https://github.com/MrChartist/fii-dii-data.git
-   cd fii-dii-data
-   ```
-3. **Install Dependencies**: `npm install`
-4. **Start the Engine**: `node server.js`
-5. **View Dashboard**: Open your browser to `http://localhost:3000`
+# 2. Clone & enter repo
+git clone https://github.com/MrChartist/fii-dii-data.git
+cd fii-dii-data
 
-### 🐧 Linux (Ubuntu/Debian) Installation
-1. **Install Prerequisites**: 
-   ```bash
-   sudo apt update
-   sudo apt install nodejs npm git
-   ```
-2. **Clone & Enter Repo**: 
-   ```bash
-   git clone https://github.com/MrChartist/fii-dii-data.git
-   cd fii-dii-data
-   ```
-3. **Install Dependencies**: `npm install`
-4. **Start the Engine**: `node server.js`
-5. **View Dashboard**: Open your browser to `http://localhost:3000`
+# 3. Install dependencies
+npm install
+
+# 4. Start the server
+node server.js
+
+# 5. Open http://localhost:3000
+```
+
+### 🪟 Windows
+```cmd
+REM 1. Install Node.js from https://nodejs.org and Git from https://git-scm.com
+
+REM 2. Clone & enter repo
+git clone https://github.com/MrChartist/fii-dii-data.git
+cd fii-dii-data
+
+REM 3. Install dependencies
+npm install
+
+REM 4. Start the server
+node server.js
+
+REM 5. Open http://localhost:3000
+```
+
+### 🐧 Linux (Ubuntu/Debian)
+```bash
+# 1. Install prerequisites
+sudo apt update && sudo apt install -y nodejs npm git
+
+# 2. Clone & enter repo
+git clone https://github.com/MrChartist/fii-dii-data.git
+cd fii-dii-data
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the server
+node server.js
+
+# 5. Open http://localhost:3000
+```
+
+### 🌍 Static Deployment (No Server Required)
+Simply open `fii_dii_india_flows_dashboard.html` directly in a browser. All data endpoints fall back to local JSON files in `/data/`.
 
 ---
 
-## 🌳 Git & Architecture Graph
+## 🌳 Project Structure
 
-```text
-* c5fcdda (HEAD -> main) feat: Complete dashboard overhaul with NSDL data, sector charts & UI polish
-* 2a1b3c4 chore: Initial FII DII Dashboard commit
-
+```
 📁 fii-dii-data/
-├── 📄 fii_dii_india_flows_dashboard.html   # Main Client Application (HTML/CSS/JS Monolith)
-├── 📄 server.js                            # Express backend + Puppeteer automation APIs
-├── 📄 package.json                         # Node.js backend dependencies
+├── 📄 fii_dii_india_flows_dashboard.html   # Main Client App (HTML/CSS/JS Monolith)
+├── 📄 server.js                            # Express backend + API proxies
+├── 📄 package.json                         # Dependencies
+├── 📄 manifest.json                        # PWA manifest
+├── 📄 sw.js                                # Service Worker
+├── 📄 robots.txt                           # Search engine crawler rules
+├── 📄 sitemap.xml                          # XML sitemap for SEO
+├── 📄 vercel.json                          # Vercel deployment config
 │
-├── 📁 data/                                # Fallback JSON datasets for Serverless deployment
-│   ├── country_auc.json
-│   ├── debt_utilisation.json
-│   ├── fpi_daily.json
-│   ├── fpi_quarterly.json
-│   ├── fpi_yearly_monthly.json
-│   ├── sector_history.json
-│   └── sector_latest.json
+├── 📁 data/                                # Local JSON fallbacks
+│   ├── country_auc.json                    # Country-wise Assets Under Custody
+│   ├── debt_utilisation.json               # FPI debt limit utilisation
+│   ├── fpi_daily.json                      # Daily FPI investment data
+│   ├── fpi_monthly_history.json            # Monthly historical FPI flows
+│   ├── fpi_quarterly.json                  # Quarterly FPI breakdown
+│   ├── fpi_yearly_monthly.json             # Multi-year monthly data (2005–2026)
+│   ├── odi_pn.json                         # Offshore Derivatives / P-Notes
+│   ├── sector_history.json                 # Historical sector allocation
+│   ├── sector_latest.json                  # Latest fortnightly sector data
+│   └── latest.json                         # Latest NSE cash + F&O snapshot
 │
-├── 📁 scripts/                             # Cron-Ready Automation & Scraping Tools
-│   ├── fetch_nsdl.js                    # Daily Puppeteer scraper for core NSDL
-│   ├── fetch_tradewise_backfill.js      # Monthly trade-wise extraction & aggregation
-│   └── build_isin_map.js                # NSE Nifty 500 ISIN-to-Symbol taxonomy generator
+├── 📁 scripts/                             # Automation & Scraping
+│   ├── fetch_nsdl.js                       # Puppeteer scraper for NSDL reports
+│   ├── fetch_nsdl_daily_backfill.js        # Historical daily backfill
+│   ├── fetch_tradewise_backfill.js         # Trade-wise monthly extraction
+│   ├── build_isin_map.js                   # Nifty 500 ISIN-to-Symbol mapper
+│   ├── append_2015_2019.js                 # Historical data append scripts
+│   ├── append_2010_2014.js
+│   └── append_2005_2009.js
 │
-└── 📄 README.md                            # Documentation
+├── 📁 icons/                               # PWA icons
+│   ├── icon-192.png
+│   └── icon-512.png
+│
+└── 📁 screenshots/                         # Tab screenshots for README
 ```
 
 ---
 
-## 🛠️ Core Technology Stack
+## 🛠️ Technology Stack
 
 | Technology | Usage |
 |-----------|-------|
-| **HTML5 / CSS3** | Custom properties, OLED dark mode, glassmorphism UI, flex grids |
+| **HTML5 / CSS3** | Custom properties, OLED dark mode, glassmorphism, flex grids |
 | **Vanilla JS** | Zero-dependency DOM manipulation and state management |
-| **Chart.js v3** | Interactive canvas visualizations (Spaghetti lines, Doughnuts, Bar combos) |
-| **Node.js** | Core server runtime environment |
-| **Express.js** | API routing and static file serving (`server.js`) |
-| **Puppeteer** | Headless Chrome browser automation for scraping complex NSDL `.aspx` grids |
-| **Socket.IO** | Future-proofed for instantaneous market WebSocket broadcasts |
+| **Chart.js v3** | Spaghetti lines, donut charts, bar combos, sparklines |
+| **Node.js + Express** | API routing, static serving, CORS proxy endpoints |
+| **Puppeteer** | Headless Chrome automation for NSDL `.aspx` grid scraping |
+| **Socket.IO** | Real-time WebSocket updates (future-proofed) |
+| **html2canvas** | Full-page screenshot export with watermarks |
+| **PWA** | Service Worker + Web App Manifest for offline support |
+
+---
+
+## 📡 Data Sources
+
+| Source | Data | Frequency |
+|--------|------|-----------|
+| **NSE TRDREQ** | FII/DII cash market buy/sell/net | Daily (market hours) |
+| **NSE Participant OI** | F&O Open Interest by participant | Daily (EOD) |
+| **NSDL FPI Reports** | Equity, Debt, Hybrid investment | Daily / Monthly |
+| **NSDL Sector Allocation** | Fortnightly BSE sector-wise FPI holdings | Fortnightly |
+| **NSDL Country AUC** | Country-wise Assets Under Custody | Monthly |
+| **NSDL Debt Utilisation** | FPI debt limit vs utilisation | Monthly |
+| **NSDL ODI/PN** | Offshore Derivative Instruments | Monthly |
+
+---
+
+## ☁️ Deployment
+
+### Vercel
+```bash
+npx vercel --prod
+```
+The included `vercel.json` handles routing automatically.
+
+### VPS / Hostinger
+```bash
+npm install
+NODE_ENV=production node server.js
+# Or use PM2: pm2 start server.js --name fii-dii
+```
+
+---
+
+## 🔗 Links
+
+- **Live Dashboard:** [fii-diidata.mrchartist.com](https://fii-diidata.mrchartist.com/)
+- **GitHub:** [github.com/MrChartist/fii-dii-data](https://github.com/MrChartist/fii-dii-data)
+- **Twitter/X:** [@mr_chartist](https://twitter.com/mr_chartist)
 
 ---
 

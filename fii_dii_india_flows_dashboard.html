@@ -1700,110 +1700,144 @@ tr:last-child td { border-bottom: none; }
       <div class="card hero-banner" style="margin-bottom:24px; text-align:center; padding:48px 32px; position:relative; overflow:hidden;">
         <div style="font-size:40px; margin-bottom:16px;">📖</div>
         <div class="hero-banner-title" style="font-size:26px; font-weight:800; color:var(--t1); letter-spacing:-0.5px; margin-bottom:8px;">Dashboard User Manual & Methodology</div>
-        <div class="hero-banner-subtitle" style="font-size:14px; color:var(--t3); line-height:1.7; max-width:650px; margin:0 auto;">A comprehensive end-to-end guide on reading the flow indicators, understanding F&O position signals, and decoding the complex algorithms calculating Market Strength.</div>
+        <div class="hero-banner-subtitle" style="font-size:14px; color:var(--t3); line-height:1.7; max-width:650px; margin:0 auto;">Complete documentation for all 7 tabs: Live NSE, FPI Macro, Sectors, Deep Dive, Databases, F&O Derivatives, and this Docs section. Covers data sources, formulas, and how to read every indicator.</div>
       </div>
 
-      <!-- Overview Section -->
+      <!-- 1. Live NSE Home -->
       <div class="card" style="margin-bottom:24px; padding:24px;">
-        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🔥 1. FII / DII Home Dashboard</h3>
-        <img src="screenshots/01_home_fii_dii_date.png" alt="Home Dashboard" style="width:100%; border-radius:12px; border:1px solid var(--sep2); margin-bottom:20px; box-shadow: var(--card-shadow);">
-        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">The home dashboard provides an immediate snapshot of the primary liquidity flowing into or out of the Indian stock market. It relies on standard Daily Cash Market volume figures released by the NSE.</p>
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">⚡ 1. Live NSE (Home Dashboard)</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">The default landing view. Shows the <strong>latest extracted session</strong> with real-time institutional flow data from NSE TRDREQ reports.</p>
         
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:16px;">
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Market Strength Gauge</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Aggregates the last 5 days of data, weighting FII Cash, DII Absorption, and Net Liquidity to generate a 0-100 score. A score <30 is a "Bear Regime" prioritizing defense, while >60 is a "Bull Regime" signaling strong institutional accumulation.</span>
-          </div>
-          <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Stock Strength Meter</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">A 10-day analytical model factoring in FII/DII historical averages, momentum (ratio of positive to negative flow days), and absorption capacity. Predicts the short-to-medium term bias of the broader indices.</span>
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Flow Strength Meter</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Visual split showing FII aggression vs DII support percentage. Calculated as: <code>FII_NET / (|FII_NET| + |DII_NET|) × 100</code></span>
           </div>
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
             <strong style="color:var(--t1); display:block; margin-bottom:6px;">Streak & Velocity Tracking</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Monitors exactly how many consecutive days FIIs or DIIs have been buying/selling, allowing you to instantly visualize prolonged trends and identify exhaustion points in institutional capitulation.</span>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Monitors consecutive buying/selling days for FIIs/DIIs with aggregated capital velocity over the streak period.</span>
           </div>
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Flow Heatmaps & Activity</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">GitHub-style daily block rendering to track activity intensity over 45 days. Darker green blocks represent daily buys > ₹5,000 Cr, while darker red signifies heavy distribution > ₹5,000 Cr.</span>
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">45-Day Concentration Heatmaps</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">GitHub-style daily block rendering. Darker green = buys > ₹5,000 Cr. Darker red = sells > ₹5,000 Cr. Reveals FII sell-off depth and DII absorption density.</span>
+          </div>
+          <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Quick Stats Strip</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">5-Year cumulative flows, SIP monthly run-rate (₹26,500 Cr), and FII NSE500 ownership percentage (16.1%, down from 28% peak).</span>
           </div>
         </div>
       </div>
 
-      <!-- F&O Section -->
+      <!-- 2. FPI Macro -->
       <div class="card" style="margin-bottom:24px; padding:24px;">
-        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🎲 2. F&O Positioning (Derivatives)</h3>
-        <img src="screenshots/02_fno_positions.png" alt="F&O Positioning" style="width:100%; border-radius:12px; border:1px solid var(--sep2); margin-bottom:20px; box-shadow: var(--card-shadow);">
-        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Instead of purely trusting Cash flow data, analyzing Futures & Options positioning gives you insight into the hedged direction professionals are betting on. DII footprint in options is minimal; FII rules this space.</p>
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">📊 2. FPI Macro (Historical Flow Trends)</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Macro-level historical trajectories across multiple timeframes. Data sourced from NSDL FPI investment reports dating back to 2005.</p>
         
         <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0; margin-bottom:16px;">
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Index Futures Ratio:</strong> Shows the sheer Long vs. Short contracts held by FIIs. A highly short-heavy position implies heavy hedging or bearish bets on benchmark indices like Nifty or Bank Nifty.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Options Long Calls:</strong> Technically a bullish position—buying the Right to purchase the index at higher dates.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Options Long Puts:</strong> Technically a bearish position—buying the Right to sell the index at lower levels. Extreme put writing/buying typically correlates with market corrections.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Momentum Sentiment Engine:</strong> A heuristic algorithm that weighs net futures, call options, and opposing put positions to summarize the net derivative bias (e.g., "Highly Bearish").</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">FPI Daily Trends:</strong> Latest registered equity, debt, and hybrid investment snapshots with summary cards showing net flows in crores.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Institutional Flow Canvas:</strong> Grand Chart.js canvas plotting FII (red) and DII (green) net flows. Switch between Daily, Weekly, Monthly, and Annual resolutions.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Quarterly FPI Breakdown:</strong> Quarter-over-quarter equity and debt allocations from 2015 onwards.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Yearly & Monthly Heatmap:</strong> Multi-year monthly data (2005–2026) showing exact FPI investment patterns across all months.</li>
         </ul>
       </div>
 
-      <!-- Databases & Matrices Section -->
+      <!-- 3. Sectors -->
       <div class="card" style="margin-bottom:24px; padding:24px;">
-        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🗄️ 3. Historical Flow Databases & Matrices</h3>
-        <img src="screenshots/03_databases_matrices.png" alt="Databases & Matrices" style="width:100%; border-radius:12px; border:1px solid var(--sep2); margin-bottom:20px; box-shadow: var(--card-shadow);">
-        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">A dedicated tabular data layer tracking institutional money across different timeframes. Features ultra-precise <code>tabular-nums</code> rendering for Bloomberg-terminal grade reading accuracy.</p>
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🌐 3. Sectors (NSDL Fortnightly FPI Allocation)</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Tracks actual equity portfolios held by Foreign Portfolio Investors inside Indian depositories via NSDL/CDSL. Reported fortnightly by SEBI.</p>
+        
+        <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0; margin-bottom:16px;">
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Sector Cards:</strong> Screener-style cards showing AUM %, FII Ownership %, and 24-fortnight sparkline charts with gradient area fills. Color-coded green (inflow) / red (outflow).</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">FPI Sector Flow Trend:</strong> Interactive 8-sector comparative line chart. Hover over any sector to highlight its trend line while fading others to 20% opacity.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Scoreboard:</strong> Top 8 inflows and outflows ranked by cumulative equity net flow with proportional progress bars.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Sort Modes:</strong> Total AUM, Fortnight Δ, 1-Year Net Flow, or Alphabetical ordering.</li>
+        </ul>
+      </div>
+
+      <!-- 4. Deep Dive -->
+      <div class="card" style="margin-bottom:24px; padding:24px;">
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🤿 4. Deep Dive (Advanced Analytics)</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Advanced datasets bridging macroeconomic demographics and debt discipline thresholds. Three independent modules.</p>
+        
+        <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0; margin-bottom:16px;">
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Trade-Wise Equity Flow Engine:</strong> Granular monthly flow tracking mapped to the Nifty 500 via ISIN cross-referencing. Shows exactly which stocks and sectors foreign funds are targeting each month via the NSE's trade-wise data.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Country-wise AUC (Donut Chart):</strong> Illustrates FPI capital sources — leading with USA, Singapore, Luxembourg, and Mauritius. Data from NSDL country-wise Assets Under Custody reports.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">ODI / Participatory Notes:</strong> Offshore Derivative Instrument tracking — shows how much foreign capital enters India via P-Notes rather than direct FPI registration.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Debt Utilisation:</strong> Monitors FPI debt investment limits vs actual utilisation — a critical indicator for bond market sentiment.</li>
+        </ul>
+      </div>
+
+      <!-- 5. Databases -->
+      <div class="card" style="margin-bottom:24px; padding:24px;">
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🗄️ 5. Databases & Matrices</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Complete institutional flow archive with Bloomberg-terminal grade tabular rendering.</p>
         
         <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0;">
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Daily (Last 15):</strong> Raw end-of-day gross buy, sell, and net numbers. Click "FII Bloodbath" or "DII Absorption" to rapidly filter structural anomaly days.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Data Export:</strong> Use the exact 'FROM' and 'TO' date selectors, and instantly jump out to a clean CSV via the "Download CSV" button for Excel modeling.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Weekly & Monthly Tracking:</strong> Groups aggregated capital to visualize broader macroeconomic trends pushing the Nifty index directionally.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Daily (Last 15):</strong> Raw end-of-day gross buy, sell, and net. Click "FII Bloodbath" or "DII Absorption" to rapidly filter anomaly days. Includes magnitude bars for visual scanning.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Weekly, Monthly & Annual:</strong> Aggregated capital flows grouped by timeframe with Nifty correlation, trend signals, and Domestic Multiplier ratios.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">CSV Export:</strong> Custom FROM/TO date filtering with instant CSV download for Excel modeling.</li>
         </ul>
       </div>
 
-      <!-- Historical Trends Section -->
+      <!-- 6. F&O -->
       <div class="card" style="margin-bottom:24px; padding:24px;">
-        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">📈 4. Historical Flow Trends (Interactive Charts)</h3>
-        <img src="screenshots/04_history.png" alt="Flow Trends" style="width:100%; border-radius:12px; border:1px solid var(--sep2); margin-bottom:20px; box-shadow: var(--card-shadow);">
-        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Visualizing capital injection is easier than reading raw matrices. This tab relies on a highly responsive HTML5 Canvas engine to plot exact FII (Blue) and DII (Green) multi-axis bars.</p>
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🎲 6. F&O Derivatives Positioning</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Participant-wise Open Interest from the NSE, fetched live via the <code>/api/participant-wise-open-interest</code> endpoint. Updated automatically on each sync.</p>
         
-        <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0;">
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Timeframe Toggles:</strong> Switch seamlessly between Daily, Weekly, Monthly, and Annual charting visualizers at the click of a button.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Visual Convergence:</strong> Whenever the Blue bar (FIIs) and Green bar (DIIs) move in tandem above the horizontal axis, expect explosive market rallies.</li>
+        <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0; margin-bottom:16px;">
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Index Futures Ratio:</strong> FII Long vs Short contracts. A heavily short position implies bearish hedging on Nifty/Bank Nifty.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Options Analysis:</strong> Call Long = Bullish, Put Long = Bearish. Extreme put writing correlates with market corrections.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Sentiment Engine:</strong> Heuristic algorithm weighing net futures, calls, and opposing put positions. Outputs: Highly Bullish → Highly Bearish.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Historical Positioning Chart:</strong> 20-period trajectory chart for FII Futures, Calls, Puts, and DII Futures.</li>
+          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Live Data Pipeline:</strong> Uses a 3-tier proxy system: Express server → corsproxy.io → allorigins.win to fetch NSE OI data reliably.</li>
         </ul>
       </div>
 
-      <!-- Sectors Section -->
+      <!-- 7. Data Sources & Architecture -->
       <div class="card" style="margin-bottom:24px; padding:24px;">
-        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🌐 5. Sector Analytics (NSDL Data)</h3>
-        <img src="screenshots/05_sectors.png" alt="Sector Analytics" style="width:100%; border-radius:12px; border:1px solid var(--sep2); margin-bottom:20px; box-shadow: var(--card-shadow);">
-        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">Published completely independent of NSE, this data tracks actual equity portfolios held by Foreign Portfolio Investors inside Indian Depositories via NSDL/CDSL. It is reported fortnightly.</p>
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">🏗️ 7. Data Sources & Architecture</h3>
+        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">The dashboard pulls data from multiple official government and exchange sources.</p>
         
-        <ul style="font-size:14px; color:var(--t3); line-height:1.8; list-style-type:none; padding-left:0;">
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Total AUM %:</strong> Identifies which 22 BSE sectors hold the majority of foreign stock. Financials universally dominate, followed by IT.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Fortnight Divergence (Δ):</strong> Extremely valuable for spotting Sector Rotation. Shows in exactly which sectors FPIs pumped or dumped capital over the last 15 days.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">1-Year Accumulation:</strong> Shows the long-term thematic stock picking of FPIs. Consistent positive numbers here usually mean major re-rating in broader sector multiples.</li>
-          <li style="margin-bottom:10px;"><strong style="color:var(--t1);">Interactive Charting:</strong> Expand the interactive diagram using the dropdown to visualize exact AUM percentage vs. 15-day buying intensity.</li>
-        </ul>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:16px;">
+          <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">NSE TRDREQ API</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Daily FII/DII cash market buy/sell/net data. The primary source for the Live NSE home tab.</span>
+          </div>
+          <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">NSDL FPI Reports</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Fortnightly sector allocation, daily FPI investment, monthly/yearly aggregates, country-wise AUC, debt utilisation, and ODI/PN data.</span>
+          </div>
+          <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">NSE Participant OI API</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">F&O participant-wise Open Interest for FII/DII index futures, stock futures, and index options positioning.</span>
+          </div>
+          <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Serverless Fallbacks</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">All data endpoints have JSON fallbacks in <code>/data/</code> allowing the dashboard to work as a static site without the Express server.</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Utilities Section -->
+      <!-- Utilities -->
       <div class="card" style="margin-bottom:24px; padding:24px;">
-        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">⚙️ 6. Global Dashboard Utilities</h3>
-        <img src="screenshots/06_docs.png" alt="Dashboard Utilities" style="width:100%; border-radius:12px; border:1px solid var(--sep2); margin-bottom:20px; box-shadow: var(--card-shadow);">
-        <p style="font-size:14px; color:var(--t2); line-height:1.7; margin-bottom:16px;">The dashboard comes packed with built-in tools for elite analysts.</p>
+        <h3 style="font-size:18px; color:var(--t1); margin-bottom:16px; border-bottom:1px solid var(--sep2); padding-bottom:12px;">⚙️ 8. Dashboard Utilities</h3>
         
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">High-RES Snapshots (📷)</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Hover over any block (Heatmaps, Tables, Charts) and click the camera icon to download a beautiful lossless watermark snapshot automatically adjusted for light/dark elements.</span>
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">📷 High-RES Snapshots</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Click the camera icon on any section to download a lossless watermarked screenshot, automatically adjusted for light/dark mode.</span>
           </div>
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Dark / Light OLED Engine</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Click the "Dark Mode" button in the upper right. It instantly triggers a pure CSS OLED blackout state.</span>
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">🌙 OLED Dark/Light Engine</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Pure CSS theme switching with #000000 OLED black for battery-efficient mobile viewing.</span>
           </div>
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Post to 𝕏 / Auto-Draft</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Uses the daily numbers matrix to formulate a pre-written insight thread and instantly opens the Twitter composer.</span>
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">𝕏 Post to Twitter</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Auto-drafts a market insight thread using live numbers and opens the Twitter composer.</span>
           </div>
           <div style="background:var(--l2); padding:16px; border-radius:10px; border:1px solid var(--sep2);">
-            <strong style="color:var(--t1); display:block; margin-bottom:6px;">Force Sync LIVE API</strong>
-            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Connects directly to the backend pipeline to instantly pull the latest institutional flow data from NSE/NSDL.</span>
+            <strong style="color:var(--t1); display:block; margin-bottom:6px;">🔄 Force Sync & PWA</strong>
+            <span style="font-size:13px; color:var(--t3); line-height:1.6;">Force Sync pulls live data from NSE/NSDL. Installable as a Progressive Web App with offline support via Service Worker.</span>
           </div>
         </div>
       </div>
